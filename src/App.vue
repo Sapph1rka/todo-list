@@ -2,7 +2,7 @@
   <div id="app">
     <div class="todo-container">
       <h1>ToDo List</h1>
-      <form @submit.prevent="addTodo" class="todo-form">
+      <form @submit.prevent="handleAddTodo" class="todo-form">
         <input type="text" v-model="newTodo" placeholder="Add new task" />
         <button type="submit" class="add-button">Add</button>
       </form>
@@ -19,38 +19,32 @@
     </div>
   </div>
 </template>
-<script>
 
+<script>
+import { ref } from 'vue';
+import { useTodoStore } from './stores/todoStore';
 import ToDoItem from './components/ToDoItem.vue';
 
 export default {
   components: {
     ToDoItem,
   },
-  data() {
-    return {
-      newTodo: '',
-      todos: [],
+  setup() {
+    const newTodo = ref('');
+    const todoStore = useTodoStore();
+
+    const handleAddTodo = () => {
+      todoStore.addTodo(newTodo.value);
+      newTodo.value = '';
     };
-  },
-  methods: {
-    addTodo() {
-      if (this.newTodo.trim()) {
-        this.todos.push({
-          id: Date.now(),
-          text: this.newTodo,
-          completed: false,
-        });
-        this.newTodo = '';
-      }
-    },
-    toggleComplete(id) {
-      const todo = this.todos.find(todo => todo.id === id);
-      if (todo) todo.completed = !todo.completed;
-    },
-    deleteItem(id) {
-      this.todos = this.todos.filter(todo => todo.id !== id);
-    },
+
+    return {
+      newTodo,
+      todos: todoStore.todos,
+      handleAddTodo,
+      toggleComplete: todoStore.toggleComplete,
+      deleteItem: todoStore.deleteItem,
+    };
   },
 };
 </script>
