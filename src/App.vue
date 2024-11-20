@@ -1,13 +1,14 @@
 <template>
   <div id="app">
     <div class="todo-container">
-      <h1>ToDo List</h1>
-      <form @submit.prevent="handleAddTodo" class="todo-form">
+      <h1 v-if="isAuthenticated">To-Do List</h1>
+
+      <form @submit.prevent="handleAddTodo" class="todo-form" v-if="isAuthenticated">
         <input type="text" v-model="newTodo" placeholder="Add new task" />
         <button type="submit" class="add-button">Add</button>
       </form>
 
-      <ul class="todo-list">
+      <ul class="todo-list" v-if="isAuthenticated">
         <ToDoItem
           v-for="todo in todos"
           :key="todo.id"
@@ -16,35 +17,26 @@
           @delete-item="deleteItem"
         />
       </ul>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import { useTodoStore } from './stores/todoStore';
-import ToDoItem from './components/ToDoItem.vue';
+import router from './router';
 
-export default {
-  components: {
-    ToDoItem,
-  },
-  setup() {
-    const newTodo = ref('');
-    const todoStore = useTodoStore();
+const newTodo = ref('');
+const todoStore = useTodoStore();
+const isAuthenticated = !!localStorage.getItem('authToken');
 
-    const handleAddTodo = () => {
-      todoStore.addTodo(newTodo.value);
-      newTodo.value = '';
-    };
+if (!isAuthenticated) {
+  router.push('/register');
+}
 
-    return {
-      newTodo,
-      todos: todoStore.todos,
-      handleAddTodo,
-      toggleComplete: todoStore.toggleComplete,
-      deleteItem: todoStore.deleteItem,
-    };
-  },
+const handleAddTodo = () => {
+  todoStore.addTodo(newTodo.value);
+  newTodo.value = '';
 };
 </script>
