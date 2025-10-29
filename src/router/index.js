@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginForm from '../components/LoginForm.vue';
 import RegisterForm from '../components/RegisterForm.vue';
-import UsersList from '../components/UsersList.vue';
+import UsersList from '../views/UsersList.vue';
 import ToDoList from '../App.vue';
 import AdminForm from '../components/AdminForm.vue';
 

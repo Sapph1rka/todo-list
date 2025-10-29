@@ -5,6 +5,7 @@
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="username" type="text" placeholder="Username" required />
       <input v-model="password" type="password" placeholder="Password" required />
+      <br>
       <p class="help-text">Already registered? <a @click.prevent="this.$router.push('/login');">Sign in!</a></p>
 
       <button type="submit">Submit</button>
